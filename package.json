@@ -1,0 +1,26 @@
+{
+  "name": "rouder",
+  "version": "0.0.1",
+  "description": "WIP - simple client side SPA routing library.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivangreene/rouder.git"
+  },
+  "keywords": [
+    "routing",
+    "router",
+    "express",
+    "browser",
+    "spa"
+  ],
+  "author": "Ivan Greene",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ivangreene/rouder/issues"
+  },
+  "homepage": "https://github.com/ivangreene/rouder#readme"
+}
