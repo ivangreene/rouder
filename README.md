@@ -1,6 +1,6 @@
 # Rouder
 
-Work in Progress - Simple client-side SPA routing library.
+Simple client-side SPA routing library.
 
 ### Features
 
