@@ -13,52 +13,62 @@ class Rouder {
     this.pushableState = !!(window.history && window.history.pushState);
     this.routes = {};
     this.stateObject = {};
+    this.listening = false;
   }
 
   start(checkNow) {
-    // TODO: start listening
-    if (checkNow) {} // TODO: refresh from current URL if checkNow is true
+    this.listening = true;
+    if (checkNow) {
+      // TODO: refresh from current URL if checkNow is true
+    }
   }
 
   pause() {
-    // TODO: pause listening
+    this.listening = false;
   }
 
   resume() {
-    // TODO: safely resume listening
+    this.listening = true;
   }
 
   goTo(path) {
-    if (this.pushableState && this.config.usePaths) {
-      window.history.pushState(this.stateObject, '', path);
-    } else if (this.config.useHashes) {
-      window.location.hash = '#' + path;
+    if (this.listening) {
+      if (this.pushableState && this.config.usePaths) {
+        window.history.pushState(this.stateObject, '', path);
+      } else if (this.config.useHashes) {
+        window.location.hash = '#' + path;
+      }
+      this.handle(path);
     }
-    this.handle(path);
   }
 
   use(path, cb) {
     var keys = [];
     var regex = pathToRegexp(path, keys);
-    this.routes[path] = {regex: regex, keys: keys, cb: cb};
+    this.routes[path] = {regex, keys, cb};
   }
 
-  remove(path) {
-    delete this.routes[path];
+  remove() {
+    var args = (typeof arguments[0] === 'array' || typeof arguments[0] === 'object') ? arguments[0] : arguments;
+    for (var a = 0; a < args.length; a++) {
+      delete this.routes[args[a]];
+    }
   }
 
   handle(path) {
-    for (var r in this.routes) {
-      var route = this.routes[r];
-      var match = path.match(route.regex);
-      if (match) {
-        match.shift();
-        var keys = {};
-        for (var k = 0; k < match.length; k++) {
-          keys[route.keys[k].name] = match[k];
+    if (this.listening) {
+      for (var r in this.routes) {
+        var route = this.routes[r];
+        var match = path.match(route.regex);
+        if (match) {
+          match.shift();
+          var keys = {};
+          for (var k = 0; k < match.length; k++) {
+            keys[route.keys[k].name] = match[k];
+          }
+          route.cb(keys);
+          break;
         }
-        route.cb(keys);
-        break;
       }
     }
   }

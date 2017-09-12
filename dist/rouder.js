@@ -71,6 +71,8 @@ var Rouder =
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -92,33 +94,38 @@ var Rouder = function () {
     this.pushableState = !!(window.history && window.history.pushState);
     this.routes = {};
     this.stateObject = {};
+    this.listening = false;
   }
 
   _createClass(Rouder, [{
     key: 'start',
     value: function start(checkNow) {
-      // TODO: start listening
-      if (checkNow) {} // TODO: refresh from current URL if checkNow is true
+      this.listening = true;
+      if (checkNow) {
+        // TODO: refresh from current URL if checkNow is true
+      }
     }
   }, {
     key: 'pause',
     value: function pause() {
-      // TODO: pause listening
+      this.listening = false;
     }
   }, {
     key: 'resume',
     value: function resume() {
-      // TODO: safely resume listening
+      this.listening = true;
     }
   }, {
     key: 'goTo',
     value: function goTo(path) {
-      if (this.pushableState && this.config.usePaths) {
-        window.history.pushState(this.stateObject, '', path);
-      } else if (this.config.useHashes) {
-        window.location.hash = '#' + path;
+      if (this.listening) {
+        if (this.pushableState && this.config.usePaths) {
+          window.history.pushState(this.stateObject, '', path);
+        } else if (this.config.useHashes) {
+          window.location.hash = '#' + path;
+        }
+        this.handle(path);
       }
-      this.handle(path);
     }
   }, {
     key: 'use',
@@ -129,23 +136,28 @@ var Rouder = function () {
     }
   }, {
     key: 'remove',
-    value: function remove(path) {
-      delete this.routes[path];
+    value: function remove() {
+      var args = typeof arguments[0] === 'array' || _typeof(arguments[0]) === 'object' ? arguments[0] : arguments;
+      for (var a = 0; a < args.length; a++) {
+        delete this.routes[args[a]];
+      }
     }
   }, {
     key: 'handle',
     value: function handle(path) {
-      for (var r in this.routes) {
-        var route = this.routes[r];
-        var match = path.match(route.regex);
-        if (match) {
-          match.shift();
-          var keys = {};
-          for (var k = 0; k < match.length; k++) {
-            keys[route.keys[k].name] = match[k];
+      if (this.listening) {
+        for (var r in this.routes) {
+          var route = this.routes[r];
+          var match = path.match(route.regex);
+          if (match) {
+            match.shift();
+            var keys = {};
+            for (var k = 0; k < match.length; k++) {
+              keys[route.keys[k].name] = match[k];
+            }
+            route.cb(keys);
+            break;
           }
-          route.cb(keys);
-          break;
         }
       }
     }
