@@ -7,6 +7,13 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     library: 'Rouder'
   },
+  externals: {
+    'path-to-regexp': {
+      commonjs: 'path-to-regexp',
+      commonjs2: 'path-to-regexp',
+      root: 'pathToRegexp'
+    }
+  },
   module: {
     loaders: [
       {
