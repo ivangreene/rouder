@@ -1,3 +1,4 @@
+var Rouder =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -65,19 +66,12 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_path_to_regexp__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_path_to_regexp___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_path_to_regexp__);
-
+var pathToRegexp =  __webpack_require__(1);
 
 class Rouder {
-  constructor() {
-  }
-
-  start(config) {
+  constructor(config) {
     this.config = {
       refreshNow: false,
       useHashes: true,
@@ -91,17 +85,30 @@ class Rouder {
     this.stateObject = {};
   }
 
+  start() {
+    // TODO: start listening
+  }
+
+  pause() {
+    // TODO: pause listening
+  }
+
+  resume() {
+    // TODO: safely resume listening
+  }
+
   goTo(path) {
     if (this.pushableState && this.config.usePaths) {
       window.history.pushState(this.stateObject, '', path);
     } else if (this.config.useHashes) {
       window.location.hash = '#' + path;
     }
+    this.handle(path);
   }
 
   use(path, cb) {
     var keys = [];
-    var regex = __WEBPACK_IMPORTED_MODULE_0_path_to_regexp___default()(path, keys);
+    var regex = pathToRegexp(path, keys);
     this.routes[path] = {regex: regex, keys: keys, cb: cb};
   }
 
@@ -126,11 +133,7 @@ class Rouder {
   }
 }
 
-
-
-
-var router = new Rouder();
-router.start({});
+module.exports = Rouder;
 
 
 /***/ }),

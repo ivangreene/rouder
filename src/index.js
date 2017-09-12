@@ -1,12 +1,9 @@
-import pathToRegexp from 'path-to-regexp';
+var pathToRegexp =  require('path-to-regexp');
 
 class Rouder {
-  constructor() {
-  }
-
-  start(config) {
+  constructor(config) {
     this.config = {
-      refreshNow: false,
+      // refreshNow: false,
       useHashes: true,
       usePaths: true,
       rootLocation: '/'
@@ -18,12 +15,26 @@ class Rouder {
     this.stateObject = {};
   }
 
+  start(checkNow) {
+    // TODO: start listening
+    if (checkNow) {} // TODO: refresh from current URL if checkNow is true
+  }
+
+  pause() {
+    // TODO: pause listening
+  }
+
+  resume() {
+    // TODO: safely resume listening
+  }
+
   goTo(path) {
     if (this.pushableState && this.config.usePaths) {
       window.history.pushState(this.stateObject, '', path);
     } else if (this.config.useHashes) {
       window.location.hash = '#' + path;
     }
+    this.handle(path);
   }
 
   use(path, cb) {
@@ -53,8 +64,4 @@ class Rouder {
   }
 }
 
-
-
-
-var router = new Rouder();
-router.start({});
+module.exports = Rouder;
