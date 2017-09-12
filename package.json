@@ -4,7 +4,8 @@
   "description": "WIP - simple client side SPA routing library.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,11 @@
   "bugs": {
     "url": "https://github.com/ivangreene/rouder/issues"
   },
-  "homepage": "https://github.com/ivangreene/rouder#readme"
+  "homepage": "https://github.com/ivangreene/rouder#readme",
+  "devDependencies": {
+    "webpack": "^3.5.6"
+  },
+  "dependencies": {
+    "path-to-regexp": "^2.0.0"
+  }
 }
