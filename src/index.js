@@ -1,15 +1,14 @@
-var pathToRegexp =  require('path-to-regexp');
+var pathToRegexp = require('path-to-regexp');
 
 class Rouder {
   constructor(config) {
     this.config = {
-      // refreshNow: false,
       useHashes: true,
       usePaths: true,
       rootLocation: '/'
     };
     if (config) Object.assign(this.config, config);
-    this.config.hashPrefix = (this.config.hashPrefix === undefined) ? this.config.rootLocation : this.config.hashPrefix;
+    if (this.config.hashPrefix === undefined) this.config.hashPrefix = this.config.rootLocation;
     this.pushableState = !!(window.history && window.history.pushState);
     this.routes = {};
     this.stateObject = {};
