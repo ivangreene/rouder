@@ -38,13 +38,17 @@ rouder.remove('home', 'posts/:id'); // Routes can later be removed by using the 
 
   You may pass these options in an object to `new Rouder()`.
 
-- `useHashes`: Boolean (default: `true`). Enables/disables watching for paths in hashtags (format `#/path`). Disabling will break backwards compatibility in legacy browsers, and `.linkTo()` will always return the same value it was passed.
-
 - `usePaths`: Boolean (default: `true`). Enables/disables watching for regular path-based locations. By disabling this, you will need to use hashtag based paths only.
 
-- `rootLocation`: String (default: `/`). Sets the root of your app, to base paths on.
+- `useHashes`: Boolean (default: `true`). Enables/disables linking to hashes with `.goTo()`. (format `#/path`). Disabling will break backwards compatibility in legacy browsers.
 
-- `hashPrefix`: String (defaults to `rootLocation`). Sets a prefix for any generated hashtag links, and enables listening for them appropriately. Good to minimize conflicts with any other hash links.
+- `rootLocation`: String (default: `"/"`). Sets the root of your app, to base paths on.
+
+- `hashPrefix`: String (defaults: `"/"`). Sets a prefix for any generated hashtag links, and enables listening for them appropriately. Good to minimize conflicts with any other hash links.
+
+- `preserveonhashchange`: Boolean (default: `true`). Enables/disables the preservation of any function that was already assigned to `window.onhashchange`, and will run that function before executing the routing logic.
+
+- `watchHashes`: Boolean (default: `true`). Enables/disables watching for hash changes using `window.onhashchange`. Hash based paths can still be used with this option disabled, but they will need to be run using `.goTo()` instead of simply linked to.
 
 ### Methods
 
@@ -60,9 +64,9 @@ rouder.remove('home', 'posts/:id'); // Routes can later be removed by using the 
 
   Stops listening for paths, using the same value they were defined with.
 
-- `rouder.goTo('path')`
+- `rouder.goTo(path[, force])`
 
-  Changes the browser URL to `path` without refreshing the page. This will obviously call any callback functions associated with `path`.
+  Navigates to `path`, relative to the configuration, without refreshing the page. This will call any callback function associated with `path`, unless this is navigating to the same path as the last path executed. Pass in `true` as the second argument to force any callback function to be run regardless.
 
 - `rouder.pause()`
 

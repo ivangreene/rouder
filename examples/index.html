@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>rouder</title>
+  </head>
+  <body>
+    <button onclick="rouder.goTo('foo', true)">rouder.goTo('foo', true)</button>
+    <button onclick="rouder.goTo('users/jos', true)">rouder.goTo('users/jos', true)</button>
+    <a href="#home">anchor to #home</a>
+    <script type="text/javascript" src="../dist/rouder.js">
+    </script>
+    <script type="text/javascript">
+      var rouder = new Rouder({usePaths: true, rootLocation: window.location.pathname, hashPrefix: ''});
+      var postsRoute = function(pathParams) {
+        console.log('Navigated to post #' + pathParams.id + '!');
+      };
+
+      var usersRoute = function(pathParams) {
+        console.log('Now viewing ' + pathParams.name + '\'s profile.');
+      };
+
+      rouder.use('posts/:id', postsRoute);
+      rouder.use('users/:name', usersRoute);
+      rouder.use('home', function() {
+        console.log('Going home...');
+      });
+      rouder.use('foo', function() {
+        console.log('bar');
+      });
+
+      rouder.start();
+    </script>
+  </body>
+</html>

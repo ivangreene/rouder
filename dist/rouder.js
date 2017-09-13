@@ -86,20 +86,35 @@ var Rouder = function () {
     this.config = {
       useHashes: true,
       usePaths: true,
-      rootLocation: '/'
+      watchHashes: true,
+      preserveonhashchange: true,
+      rootLocation: '/',
+      hashPrefix: '/'
     };
     if (config) Object.assign(this.config, config);
-    if (this.config.hashPrefix === undefined) this.config.hashPrefix = this.config.rootLocation;
     this.pushableState = !!(window.history && window.history.pushState);
     this.routes = {};
     this.stateObject = {};
+    this.lastPath = '';
+    this.hashRegex = new RegExp('^#' + this.config.hashPrefix + '(.+)$');
     this.listening = false;
   }
 
   _createClass(Rouder, [{
     key: 'start',
     value: function start(checkNow) {
+      var _this = this;
+
       this.listening = true;
+      if (this.config.watchHashes) {
+        this.oldonhashchange = this.config.preserveonhashchange ? window.onhashchange || function () {} : function () {};
+        window.onhashchange = function () {
+          _this.oldonhashchange();
+          var match;
+          if (window.location && window.location.hash) match = window.location.hash.match(_this.hashRegex);
+          if (match && match[1]) _this.handle(match[1]);
+        };
+      }
       if (checkNow) {
         // TODO: refresh from current URL if checkNow is true
       }
@@ -116,14 +131,17 @@ var Rouder = function () {
     }
   }, {
     key: 'goTo',
-    value: function goTo(path) {
+    value: function goTo(path, force) {
       if (this.listening) {
         if (this.pushableState && this.config.usePaths) {
-          window.history.pushState(this.stateObject, '', path);
+          if (this.lastPath !== path || force) {
+            window.history.pushState(this.stateObject, '', '' + this.config.rootLocation + path);
+            this.handle(path);
+          }
         } else if (this.config.useHashes) {
-          window.location.hash = '#' + path;
+          if (!this.config.watchHashes || force && window.location.hash === '#' + this.config.hashPrefix + path) this.handle(path);
+          window.location.hash = '#' + this.config.hashPrefix + path;
         }
-        this.handle(path);
       }
     }
   }, {
@@ -158,6 +176,7 @@ var Rouder = function () {
             break;
           }
         }
+        this.lastPath = path;
       }
     }
   }]);
