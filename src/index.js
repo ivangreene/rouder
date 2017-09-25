@@ -1,7 +1,8 @@
 var pathToRegexp = require('path-to-regexp');
 
 class Rouder {
-  constructor(config) {
+  constructor(config, $window) {
+    this.window = $window || window;
     this.config = {
       useHashes: true,
       usePaths: true,
@@ -11,7 +12,7 @@ class Rouder {
       hashPrefix: '/'
     };
     if (config) Object.assign(this.config, config);
-    this.pushableState = !!(window.history && window.history.pushState);
+    this.pushableState = !!(this.window.history && this.window.history.pushState);
     this.routes = {};
     this.stateObject = {};
     this.lastPath = '';
@@ -22,11 +23,11 @@ class Rouder {
   start(checkNow) {
     this.listening = true;
     if (this.config.watchHashes) {
-      this.oldonhashchange = this.config.preserveonhashchange ? (window.onhashchange || (() => {})) : (() => {});
-      window.onhashchange = () => {
+      this.oldonhashchange = this.config.preserveonhashchange && typeof this.window.onhashchange === 'function' ? this.window.onhashchange : (() => {});
+      this.window.onhashchange = () => {
         this.oldonhashchange();
         var match;
-        if (window.location && window.location.hash) match = window.location.hash.match(this.hashRegex);
+        if (this.window.location && this.window.location.hash) match = this.window.location.hash.match(this.hashRegex);
         if (match && match[1]) this.handle(match[1]);
       }
     }
@@ -47,13 +48,13 @@ class Rouder {
     if (this.listening) {
       if (this.pushableState && this.config.usePaths) {
         if (this.lastPath !== path || force) {
-          window.history.pushState(this.stateObject, '', `${this.config.rootLocation}${path}`);
+          this.window.history.pushState(this.stateObject, '', `${this.config.rootLocation}${path}`);
           this.handle(path);
         }
       } else if (this.config.useHashes) {
-        if (!this.config.watchHashes || force && window.location.hash === `#${this.config.hashPrefix}${path}`)
+        if (!this.config.watchHashes || force && this.window.location.hash === `#${this.config.hashPrefix}${path}`)
           this.handle(path);
-        window.location.hash = `#${this.config.hashPrefix}${path}`;
+        this.window.location.hash = `#${this.config.hashPrefix}${path}`;
       }
     }
   }

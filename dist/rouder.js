@@ -80,9 +80,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var pathToRegexp = __webpack_require__(1);
 
 var Rouder = function () {
-  function Rouder(config) {
+  function Rouder(config, $window) {
     _classCallCheck(this, Rouder);
 
+    this.window = $window || window;
     this.config = {
       useHashes: true,
       usePaths: true,
@@ -92,7 +93,7 @@ var Rouder = function () {
       hashPrefix: '/'
     };
     if (config) Object.assign(this.config, config);
-    this.pushableState = !!(window.history && window.history.pushState);
+    this.pushableState = !!(this.window.history && this.window.history.pushState);
     this.routes = {};
     this.stateObject = {};
     this.lastPath = '';
@@ -107,11 +108,11 @@ var Rouder = function () {
 
       this.listening = true;
       if (this.config.watchHashes) {
-        this.oldonhashchange = this.config.preserveonhashchange ? window.onhashchange || function () {} : function () {};
-        window.onhashchange = function () {
+        this.oldonhashchange = this.config.preserveonhashchange && typeof this.window.onhashchange === 'function' ? this.window.onhashchange : function () {};
+        this.window.onhashchange = function () {
           _this.oldonhashchange();
           var match;
-          if (window.location && window.location.hash) match = window.location.hash.match(_this.hashRegex);
+          if (_this.window.location && _this.window.location.hash) match = _this.window.location.hash.match(_this.hashRegex);
           if (match && match[1]) _this.handle(match[1]);
         };
       }
@@ -135,12 +136,12 @@ var Rouder = function () {
       if (this.listening) {
         if (this.pushableState && this.config.usePaths) {
           if (this.lastPath !== path || force) {
-            window.history.pushState(this.stateObject, '', '' + this.config.rootLocation + path);
+            this.window.history.pushState(this.stateObject, '', '' + this.config.rootLocation + path);
             this.handle(path);
           }
         } else if (this.config.useHashes) {
-          if (!this.config.watchHashes || force && window.location.hash === '#' + this.config.hashPrefix + path) this.handle(path);
-          window.location.hash = '#' + this.config.hashPrefix + path;
+          if (!this.config.watchHashes || force && this.window.location.hash === '#' + this.config.hashPrefix + path) this.handle(path);
+          this.window.location.hash = '#' + this.config.hashPrefix + path;
         }
       }
     }
