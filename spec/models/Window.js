@@ -28,6 +28,8 @@ class Modern extends Window {
   }
 };
 
+module.exports = Window;
+
 module.exports.Modern = Modern;
 
 module.exports.Legacy = class Legacy extends Window {};

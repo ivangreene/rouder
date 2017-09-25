@@ -2,7 +2,9 @@
   "name": "rouder",
   "version": "0.1.1",
   "description": "Simple client side SPA routing library.",
-  "main": "dist/rouder.min.js",
+  "main": "src/index.js",
+  "browser": "dist/rouder.js",
+  "unpkg": "dist/rouder.min.js",
   "scripts": {
     "test": "jasmine",
     "build": "webpack --env.prod",
@@ -32,7 +34,6 @@
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "jasmine": "^2.8.0",
-    "mock-browser": "^0.92.14",
     "webpack": "^3.5.6"
   },
   "dependencies": {
