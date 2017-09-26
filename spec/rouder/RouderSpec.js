@@ -1,4 +1,3 @@
-var MockBrowser = require('mock-browser').mocks.MockBrowser;
 var Window = require('../models/Window');
 var Rouder = require('../../src/index.js');
 

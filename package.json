@@ -3,14 +3,16 @@
   "version": "0.1.1",
   "description": "Simple client side SPA routing library.",
   "main": "src/index.js",
-  "browser": "dist/rouder.js",
   "unpkg": "dist/rouder.min.js",
   "scripts": {
     "test": "jasmine",
+    "prebuild": "npm run test",
     "build": "webpack --env.prod",
+    "postbuild": "npm run build-dev",
     "build-dev": "webpack --env.dev",
     "watch": "webpack --watch --env.dev",
-    "watch-minify": "webpack --watch --env.prod"
+    "watch-minify": "webpack --watch --env.prod",
+    "preversion": "npm run build"
   },
   "repository": {
     "type": "git",

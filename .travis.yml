@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- node
+script: npm run build
+deploy:
+  provider: npm
+  email: ivan@ivan.sh
+  api_key:
+    secure: Q0fbzEVpAZ839Mh3izek5RmUSF10keLEBTtDj23pM0dHBzsPQQCMa/3vzb0+5dfu2jz+aekXtgqfe6CEHc8PPxCH8ocRlLSPth6PRUUBUgcGVr1dh5LR+oiHWJcMjlbQ3OMjZWRK2dtuk8ddhxKBUJjYkodPNQy2xkEa9h3iRMUrvUB0p7ctJC7Afplo4ppprcKp0nfSPBcNh9FmABwQ2B0557Hut56ggBus9bV84vZSC0A4rTtNn23b4GZk205eBtGzhGGWWV0PQq+NbA3p9nYUY5H7gjwKqbgc9mjhUSMprfOdanTdZL/vgamr8mAGFGl/k21/J9QKclbOGRleq4F2lSGiioenylcy5tfnKPyuBIBbUpBevlbkR2akrKPYLrMouAiidY/w0ErUKji8NdfnMSHnST6QqEfkihDr/Wnxm51Qr6fGzby2pi3eJz8s99AYszUf2m4z1XhD/jjdSgLI3qbBXZBMnSMT8RMKPEug9gu0//8wYZJgnTB5PbooXBBunX51cvJM3AsuME+DklFIf53ER0gYyucdNwZ8TmJE2eRbse+cLKlICj/LmJAM2+mRbh7hrVjSlTUc9D2dD9LYuP3HVa2kmORFxCnA9OfkBhQKQaoOXec10a/+DdAFdIQKe3BwZZ3d7RzDDvs6+u0sPZWLaoKCXjGzMN9F0As=
+  on:
+    tags: true
+    repo: ivangreene/rouder

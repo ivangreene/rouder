@@ -1,17 +1,41 @@
 # Rouder
 
-Simple client-side SPA routing library.
+Simple client-side routing library.
 
 ### Features
 
-- The biggest convenience is that backwards compatibility with legacy browsers not supporting non-refreshing location changes is baked in. Write routes once, and rouder will listen appropriately. You can use the outlined methods below to go to a URL that won't refresh the page.
+- Define Rouder instances to use either path-based or hash-based routes, or select automatically depending on browser compatibility.
+
+- Backwards compatibility with legacy browsers not supporting non-refreshing location changes is baked in. Write routes once, and rouder will listen appropriately. You can use the outlined methods below to go to a URL that won't refresh the page.
 
 - This library should work well to allow users to be able to share a link with expected results, and result in better crawlability of your site.
+
+- Intended specifically for browser based environments as it relies on browser-exclusive APIs.
+
+### Including
+
+#### Rouder is available for direct use from the unpkg CDN at https://unpkg.com/rouder as either minified or not.
+
+The builds in `dist/` will define `Rouder` as a global.
+
+```html
+<!-- Latest minified build (links to dist/rouder.min.js) -->
+<script src="https://unpkg.com/rouder"></script>
+
+<!-- Latest unminified build -->
+<script src="https://unpkg.com/rouder/dist/rouder.js"></script>
+```
+
+#### Rouder can also be imported in a JavaScript file that will be prepared for the browser with a build tool such as webpack or browserify.
+
+```js
+var Rouder = require('rouder');
+```
 
 ### Quick example
 
 ```js
-var rouder = new Rouder();
+var rouder = new Rouder(); // An optional config object could be passed here
 
 var postsRoute = function(params) {
   console.log('Navigated to post #' + params.id + '!');
@@ -21,7 +45,7 @@ var usersRoute = function(params) {
   console.log('Now viewing ' + params.name + '\'s profile.');
 };
 
-rouder.use('posts/:id', postsRoute);
+rouder.use('posts/:id', postsRoute); // Define routes with .use()
 rouder.use('users/:name', usersRoute);
 rouder.use('home', function() {
   console.log('Going home...');
@@ -50,6 +74,8 @@ rouder.remove('home', 'posts/:id'); // Routes can later be removed by using the 
 
 - `watchHashes`: Boolean (default: `true`). Enables/disables watching for hash changes using `window.onhashchange`. Hash based paths can still be used with this option disabled, but they will need to be run using `.goTo()` instead of simply linked to.
 
+- An alternative `window` object may be passed as the second argument to `new Rouder()`. This is used in the pre-build tests and may not have a real use application.
+
 ### Methods
 
 - `rouder.start()`
@@ -75,29 +101,3 @@ rouder.remove('home', 'posts/:id'); // Routes can later be removed by using the 
 - `rouder.resume()`
 
   Resumes listening for navigation.
-
-## Planned for later
-
-- `rouder.watchLinks(['attribute'][, 'data-flagname'])`
-
-  Causes rouder to begin watching HTML elements containing `data-flagname` (defaults to `data-rouder-watch`), and will change the URL in `attribute` (defaults to `href`) if needed for backwards compatibility in browsers not supporting non-refresh location changes without hashtags.
-
-  For example, if you had HTML like
-
-  ```html
-  <a href="/posts/2" data-rouder-watch>
-  <a href="http://example.com/users/bob" data-rouder-watch>```
-
-  calling `rouder.watchLinks()` would cause rouder to determine browser compatibility for the user, and either leave these links as they are (a path-based URL), or prepend a hashtag to the path.
-
-  In a legacy browser, the links would be changed to `#/posts/2` and `http://example.com/#/users/bob`.
-
-  The links will be updated immediately upon `.watchLinks()` being called, and upon all page navigations (any hashchange or path change, whether it corresponds to a path defined with `rouder.use()` or not). You may also call `rouder.checkAllLinks()` at any time to manually refresh all watched links (such as when dynamic content that doesn't require a location change may contain links).
-
-- `rouder.checkAllLinks()`
-
-  Causes rouder to change watched HTML links if necessary. See `.watchLinks()` above.
-
-- `rouder.linkTo('path')`
-
-  Simply returns a link to `path` which will function in the current browser without refreshing the page (either a path-based URL, or a hashtag based URL). May be either a relative or absolute URL (will return the same type that was passed).
